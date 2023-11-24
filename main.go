@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	exercices "go_from_zero/exercises"
+	"go_from_zero/inputs"
 	"go_from_zero/variables"
 )
 
@@ -23,6 +24,16 @@ func main() {
 	fmt.Println("--------------------------------")
 	fmt.Println("----------- EX 1 -----------")
 	fmt.Println(exercices.IsMoreThan100("a "))
+	fmt.Println("--------------------------------")
+
+	fmt.Println("--------------------------------")
+	fmt.Println("----------- Inputs -----------")
+	inputs.GetNumbers()
+	fmt.Println("--------------------------------")
+
+	fmt.Println("--------------------------------")
+	fmt.Println("----------- EX 2 -----------")
+	exercices.GetMultiplicationTable()
 	fmt.Println("--------------------------------")
 
 }
