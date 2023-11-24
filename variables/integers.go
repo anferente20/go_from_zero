@@ -12,5 +12,4 @@ func ShowIntegers() {
 	fmt.Println("32-bit Integer = ", integer32)
 	fmt.Println("64-bit Integer = ", integer64)
 	fmt.Println("--------------------------------")
-
 }
