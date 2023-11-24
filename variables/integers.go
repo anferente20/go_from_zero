@@ -10,5 +10,7 @@ func ShowIntegers() {
 	fmt.Println("----------- Integers -----------")
 	fmt.Println("Common Integer = ", commonInteger)
 	fmt.Println("32-bit Integer = ", integer32)
-	fmt.Println("645-bit Integer = ", integer64)
+	fmt.Println("64-bit Integer = ", integer64)
+	fmt.Println("--------------------------------")
+
 }
