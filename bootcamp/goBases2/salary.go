@@ -9,7 +9,7 @@ func GetSalary(hours int, category string) float32 {
 	case "C":
 		return calculateSalary(hours, 3000) * 1.5
 	default:
-		return calculateSalary(hours, 1000)
+		return 0
 	}
 }
 
