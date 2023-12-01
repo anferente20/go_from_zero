@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	gobases3 "go_from_zero/bootcamp/goBases3"
 )
 
 func main() {
@@ -169,6 +170,31 @@ func main() {
 
 	// fmt.Println("--------------------------------")
 	fmt.Println("--------------------------------")
+	// Products
+
+	// var products []gobases3.Product
+	// product1 := gobases3.Product{
+	// 	ID:          1,
+	// 	Name:        "Carnecita",
+	// 	Description: "Carne fresca de velociraptor",
+	// 	Category:    "Comida",
+	// }
+	// products = product1.Save(product1, products)
+
+	// product1.GetAll(products)
+
+	person := gobases3.Person{
+		ID:          1,
+		Name:        "Andres F",
+		DateOfBirth: "05/04/1997",
+	}
+
+	employee := gobases3.Employee{
+		ID:       1,
+		Position: "Software Developer",
+		PersonR:  person,
+	}
+	employee.PrintEmployee()
 	fmt.Println("--------------------------------")
 
 }
