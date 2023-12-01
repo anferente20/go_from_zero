@@ -183,18 +183,29 @@ func main() {
 
 	// product1.GetAll(products)
 
-	person := gobases3.Person{
-		ID:          1,
-		Name:        "Andres F",
-		DateOfBirth: "05/04/1997",
-	}
+	// Employee
+	// person := gobases3.Person{
+	// 	ID:          1,
+	// 	Name:        "Andres F",
+	// 	DateOfBirth: "05/04/1997",
+	// }
 
-	employee := gobases3.Employee{
-		ID:       1,
-		Position: "Software Developer",
-		PersonR:  person,
-	}
-	employee.PrintEmployee()
+	// employee := gobases3.Employee{
+	// 	ID:       1,
+	// 	Position: "Software Developer",
+	// 	PersonR:  person,
+	// }
+	// employee.PrintEmployee()
+
+	//Peoduc type
+	smallProduct := gobases3.NewProduct(gobases3.Small, 2000)
+	mediumlProduct := gobases3.NewProduct(gobases3.Medium, 5000)
+	largeProduct := gobases3.NewProduct(gobases3.Large, 20000)
+
+	fmt.Println("Small product: ", smallProduct.GetPrice())
+	fmt.Println("Medium product: ", mediumlProduct.GetPrice())
+	fmt.Println("Large product: ", largeProduct.GetPrice())
+
 	fmt.Println("--------------------------------")
 
 }
