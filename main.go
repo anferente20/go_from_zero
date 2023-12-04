@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	gobases4 "go_from_zero/bootcamp/goBases4"
 )
@@ -170,7 +169,7 @@ func main() {
 	// fmt.Println("The average is: ", aveValue, err)
 
 	// fmt.Println("--------------------------------")
-	fmt.Println("--------------------------------")
+	// fmt.Println("--------------------------------")
 	// Products
 
 	// var products []gobases3.Product
@@ -207,48 +206,64 @@ func main() {
 	// fmt.Println("Medium product: ", mediumlProduct.GetPrice())
 	// fmt.Println("Large product: ", largeProduct.GetPrice())
 
-	salary, err := gobases4.CalculateSalary(30, 2000)
-	var errLow *gobases4.LowSalaryError
-	var errTax *gobases4.TaxableError
+	//Salary
+	// salary, err := gobases4.CalculateSalary(30, 2000)
+	// var errLow *gobases4.LowSalaryError
+	// var errTax *gobases4.TaxableError
 
-	if err != nil && errors.As(err, &errLow) {
-		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
-	} else if err != nil && errors.As(err, &errTax) {
-		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
-	} else {
-		fmt.Printf("Salary: %g \n", salary)
+	// if err != nil && errors.As(err, &errLow) {
+	// 	fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	// } else if err != nil && errors.As(err, &errTax) {
+	// 	fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	// } else {
+	// 	fmt.Printf("Salary: %g \n", salary)
+	// }
+	// fmt.Println("--------------------------------")
+
+	// salary, err = gobases4.CalculateSalary(80, 100)
+	// if err != nil && errors.As(err, &errLow) {
+	// 	fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	// } else if err != nil && errors.As(err, &errTax) {
+	// 	fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	// } else {
+	// 	fmt.Printf("Salary: %g \n", salary)
+	// }
+	// fmt.Println("--------------------------------")
+
+	// salary, err = gobases4.CalculateSalary(120, 1000)
+	// if err != nil && errors.As(err, &errLow) {
+	// 	fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	// } else if err != nil && errors.As(err, &errTax) {
+	// 	fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	// } else {
+	// 	fmt.Printf("Salary: %g \n", salary)
+	// }
+	// fmt.Println("--------------------------------")
+
+	// salary, err = gobases4.CalculateSalary(190, 1000)
+	// if err != nil && errors.As(err, &errLow) {
+	// 	fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	// } else if err != nil && errors.As(err, &errTax) {
+	// 	fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	// } else {
+	// 	fmt.Printf("Salary: %g \n", salary)
+	// }
+
+	//Archives
+	fmt.Println("---------------Read File-----------------")
+	info := gobases4.Read("/Users/arenteria/Documents/Cursos/go_from_zero/bootcamp/goBases4/customers.txt")
+	fmt.Println(info)
+
+	Customers := []gobases4.Customer{
+		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 1, Phone: "3192735641", Home: "Here"},
+		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 2, Phone: "3192735641", Home: "Here"},
+		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 3, Phone: "3192735641", Home: "Here"},
+		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 4, Phone: "3192735641", Home: "Here"},
+		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 5, Phone: "3192735641", Home: "Here"},
 	}
-	fmt.Println("--------------------------------")
+	gobases4.Write("bootcamp/goBases4/customers.txt", gobases4.Customer{ID: 6, Name: "Felipe", File: "Felipe.txt", Phone: "3192734512", Home: "Here"}, Customers)
 
-	salary, err = gobases4.CalculateSalary(80, 100)
-	if err != nil && errors.As(err, &errLow) {
-		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
-	} else if err != nil && errors.As(err, &errTax) {
-		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
-	} else {
-		fmt.Printf("Salary: %g \n", salary)
-	}
-	fmt.Println("--------------------------------")
-
-	salary, err = gobases4.CalculateSalary(120, 1000)
-	if err != nil && errors.As(err, &errLow) {
-		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
-	} else if err != nil && errors.As(err, &errTax) {
-		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
-	} else {
-		fmt.Printf("Salary: %g \n", salary)
-	}
-	fmt.Println("--------------------------------")
-
-	salary, err = gobases4.CalculateSalary(190, 1000)
-	if err != nil && errors.As(err, &errLow) {
-		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
-	} else if err != nil && errors.As(err, &errTax) {
-		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
-	} else {
-		fmt.Printf("Salary: %g \n", salary)
-	}
-
+	fmt.Println("End of execution")
 	fmt.Println("--------------------------------")
 
 }
