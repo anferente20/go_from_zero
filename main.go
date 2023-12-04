@@ -1,8 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	gobases3 "go_from_zero/bootcamp/goBases3"
+	gobases4 "go_from_zero/bootcamp/goBases4"
 )
 
 func main() {
@@ -198,13 +199,55 @@ func main() {
 	// employee.PrintEmployee()
 
 	//Peoduc type
-	smallProduct := gobases3.NewProduct(gobases3.Small, 2000)
-	mediumlProduct := gobases3.NewProduct(gobases3.Medium, 5000)
-	largeProduct := gobases3.NewProduct(gobases3.Large, 20000)
+	// smallProduct := gobases3.NewProduct(gobases3.Small, 2000)
+	// mediumlProduct := gobases3.NewProduct(gobases3.Medium, 5000)
+	// largeProduct := gobases3.NewProduct(gobases3.Large, 20000)
 
-	fmt.Println("Small product: ", smallProduct.GetPrice())
-	fmt.Println("Medium product: ", mediumlProduct.GetPrice())
-	fmt.Println("Large product: ", largeProduct.GetPrice())
+	// fmt.Println("Small product: ", smallProduct.GetPrice())
+	// fmt.Println("Medium product: ", mediumlProduct.GetPrice())
+	// fmt.Println("Large product: ", largeProduct.GetPrice())
+
+	salary, err := gobases4.CalculateSalary(30, 2000)
+	var errLow *gobases4.LowSalaryError
+	var errTax *gobases4.TaxableError
+
+	if err != nil && errors.As(err, &errLow) {
+		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	} else if err != nil && errors.As(err, &errTax) {
+		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	} else {
+		fmt.Printf("Salary: %g \n", salary)
+	}
+	fmt.Println("--------------------------------")
+
+	salary, err = gobases4.CalculateSalary(80, 100)
+	if err != nil && errors.As(err, &errLow) {
+		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	} else if err != nil && errors.As(err, &errTax) {
+		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	} else {
+		fmt.Printf("Salary: %g \n", salary)
+	}
+	fmt.Println("--------------------------------")
+
+	salary, err = gobases4.CalculateSalary(120, 1000)
+	if err != nil && errors.As(err, &errLow) {
+		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	} else if err != nil && errors.As(err, &errTax) {
+		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	} else {
+		fmt.Printf("Salary: %g \n", salary)
+	}
+	fmt.Println("--------------------------------")
+
+	salary, err = gobases4.CalculateSalary(190, 1000)
+	if err != nil && errors.As(err, &errLow) {
+		fmt.Printf("Salary: %g, LowSalaryError: %s \n", salary, err.Error())
+	} else if err != nil && errors.As(err, &errTax) {
+		fmt.Printf("Salary: %g, TaxableError: %s \n", salary, err.Error())
+	} else {
+		fmt.Printf("Salary: %g \n", salary)
+	}
 
 	fmt.Println("--------------------------------")
 
