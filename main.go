@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	gobases4 "go_from_zero/bootcamp/goBases4"
+	"time"
 )
 
 func main() {
@@ -250,20 +250,38 @@ func main() {
 	// }
 
 	//Archives
-	fmt.Println("---------------Read File-----------------")
-	info := gobases4.Read("/Users/arenteria/Documents/Cursos/go_from_zero/bootcamp/goBases4/customers.txt")
-	fmt.Println(info)
+	// fmt.Println("---------------Read File-----------------")
+	// info := gobases4.Read("/Users/arenteria/Documents/Cursos/go_from_zero/bootcamp/goBases4/customers.txt")
+	// fmt.Println(info)
 
-	Customers := []gobases4.Customer{
-		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 1, Phone: "3192735641", Home: "Here"},
-		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 2, Phone: "3192735641", Home: "Here"},
-		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 3, Phone: "3192735641", Home: "Here"},
-		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 4, Phone: "3192735641", Home: "Here"},
-		gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 5, Phone: "3192735641", Home: "Here"},
+	// Customers := []gobases4.Customer{
+	// 	gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 1, Phone: "3192735641", Home: "Here"},
+	// 	gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 2, Phone: "3192735641", Home: "Here"},
+	// 	gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 3, Phone: "3192735641", Home: "Here"},
+	// 	gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 4, Phone: "3192735641", Home: "Here"},
+	// 	gobases4.Customer{File: "AndresR.txt", Name: "Andres Rente", ID: 5, Phone: "3192735641", Home: "Here"},
+	// }
+	// gobases4.Write("bootcamp/goBases4/customers.txt", gobases4.Customer{ID: 6, Name: "Felipe", File: "Felipe.txt", Phone: "3192734512", Home: "Here"}, Customers)
+
+	// fmt.Println("End of execution")
+
+	//Channels
+	c := make(chan int)
+	for i := 0; i < 10; i++ {
+		go process(i, c)
 	}
-	gobases4.Write("bootcamp/goBases4/customers.txt", gobases4.Customer{ID: 6, Name: "Felipe", File: "Felipe.txt", Phone: "3192734512", Home: "Here"}, Customers)
+	fmt.Println("Program finished")
+	for i := 0; i < 10; i++ {
+		fmt.Println("Last Value: ", <-c)
 
-	fmt.Println("End of execution")
+	}
 	fmt.Println("--------------------------------")
 
+}
+
+func process(i int, c chan int) {
+	fmt.Println(i, " - Begins")
+	time.Sleep((1000 * time.Millisecond))
+	fmt.Println(i, " - Ends")
+	c <- i
 }
