@@ -1,16 +1,11 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
-
 func main() {
 	// scanner := bufio.NewScanner(os.Stdin)
 	// fmt.Println("Hello world")
 
 	// variables.ShowIntegers()
-	// variables.OtherVariables()
+	// variables.OtherVariables()  s
 
 	// fmt.Println("--------------------------------")
 	// fmt.Println("----------- Cast Integer -----------")
@@ -266,22 +261,22 @@ func main() {
 	// fmt.Println("End of execution")
 
 	//Channels
-	c := make(chan int)
-	for i := 0; i < 10; i++ {
-		go process(i, c)
-	}
-	fmt.Println("Program finished")
-	for i := 0; i < 10; i++ {
-		fmt.Println("Last Value: ", <-c)
+	// c := make(chan int)
+	// for i := 0; i < 10; i++ {
+	// 	go process(i, c)
+	// }
+	// fmt.Println("Program finished")
+	// for i := 0; i < 10; i++ {
+	// 	fmt.Println("Last Value: ", <-c)
 
-	}
-	fmt.Println("--------------------------------")
+	// }
+	// fmt.Println("--------------------------------")
 
 }
 
-func process(i int, c chan int) {
-	fmt.Println(i, " - Begins")
-	time.Sleep((1000 * time.Millisecond))
-	fmt.Println(i, " - Ends")
-	c <- i
-}
+// func process(i int, c chan int) {
+// 	fmt.Println(i, " - Begins")
+// 	time.Sleep((1000 * time.Millisecond))
+// 	fmt.Println(i, " - Ends")
+// 	c <- i
+// }
