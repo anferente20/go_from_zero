@@ -1,4 +1,4 @@
-module vinyl-api
+module bootcamp_go_web
 
 go 1.21.4
 
