@@ -1,25 +1,63 @@
 package supermarket
 
 import (
-	"bootcamp_go_web/internal/domain/models"
-	"bootcamp_go_web/internal/domain/utils/products"
+	"bootcamp_go_web/internal/domain"
+	"fmt"
+	"slices"
 )
 
-func RegisterProduct(product models.Product) {
-
-	products.Products = append(products.Products, product)
+type ProductRepository struct {
+	productsDB []domain.Product
 }
 
-func UpdateProduct(product models.Product) {
-	for _, prod := range products.Products {
-		if product.Id == prod.Id {
-			prod.Name = product.Name
-			prod.CodeValue = product.CodeValue
-			prod.Expiration = product.Expiration
-			prod.Price = product.Price
-			prod.IsPublished = product.IsPublished
-			prod.Quantity = product.Quantity
+func NewProductRepository(prods []domain.Product) ProductRepository {
+	return ProductRepository{prods}
+}
 
+func (r *ProductRepository) GetAllProducts() []domain.Product {
+	fmt.Println(len(r.productsDB))
+
+	return r.productsDB
+}
+
+func (r *ProductRepository) GetById(id int) domain.Product {
+	product := domain.Product{}
+	for _, prod := range r.productsDB {
+		if prod.Id == id {
+			product = prod
 		}
 	}
+	return product
+
+}
+
+func (r *ProductRepository) RegisterProduct(product domain.Product) domain.Product {
+	product.Id = len(r.productsDB) + 1
+
+	r.productsDB = append(r.productsDB, product)
+
+	return product
+}
+
+func (r *ProductRepository) UpdateProduct(product domain.Product) domain.Product {
+	product_index := 0
+	for _, prod := range r.productsDB {
+		if product.Id == prod.Id {
+			product_index = slices.Index(r.productsDB, prod)
+			break
+		}
+	}
+	r.productsDB[product_index] = product
+	return r.productsDB[product_index]
+}
+
+func (r *ProductRepository) SearchProducts(productPrice float64) []domain.Product {
+	productsValid := []domain.Product{}
+
+	for _, product := range r.productsDB {
+		if product.Price > productPrice {
+			productsValid = append(productsValid, product)
+		}
+	}
+	return productsValid
 }

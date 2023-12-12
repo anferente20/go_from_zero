@@ -2,7 +2,6 @@ package api
 
 import (
 	"bootcamp_go_web/cmd/go_web/controller"
-	"bootcamp_go_web/internal/ping"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,18 +9,14 @@ import (
 var Api = gin.Default()
 
 func SetRoutes() {
-	Api.GET("/ping", ping.Ping)
-	Api.GET("/products", controller.GetProducts())
-	Api.GET("/products/:id", controller.GetProductByID())
-	Api.GET("/products/search", controller.SearchProducts())
-
-	Api.POST("/products", controller.AddProduct())
-
-	Api.PUT("/products/:id", controller.ChangeProduct())
+	//Create products routes
+	productsGroup := Api.Group("/products")
+	productRouter := controller.NewProductRouter(productsGroup)
+	productRouter.ProductRoutes()
 
 }
 
 func StartApi() {
-	Api.Run("localhost:8080")
+	Api.Run(":8080")
 
 }
