@@ -148,6 +148,16 @@ func (js JsonStore) GetAll() []domain.Product {
 	return products
 }
 
+func (js JsonStore) GetAllIds() []int {
+	products := js.GetAll()
+
+	products_ids := []int{}
+
+	for _, prod := range products {
+		products_ids = append(products_ids, prod.Id)
+	}
+	return products_ids
+}
 func (js JsonStore) Add(product domain.Product) (domain.Product, error) {
 	jsonFile, err := os.Open(js.FileName)
 	defer jsonFile.Close()
@@ -167,6 +177,7 @@ func (js JsonStore) Add(product domain.Product) (domain.Product, error) {
 	if err != nil {
 		return newProduct, err
 	}
+
 	product.Id = len(products) + 1
 	products = append(products, product)
 	newProduct = products[len(products)-1]

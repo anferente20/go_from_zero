@@ -12,6 +12,7 @@ import (
 	"os"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,9 +35,47 @@ func (r *ProductRouter) ProductRoutes() {
 	r.productGroup.GET("/", r.GetProducts())
 	r.productGroup.GET("/:id", r.GetProductByID())
 	r.productGroup.GET("/search", r.SearchProducts())
+	r.productGroup.GET("/consumer_price", r.GetConsumerPrice())
+
 	r.productGroup.POST("/", r.AddProduct())
 
 	r.productGroup.PATCH("/:id", r.ChangeProduct())
+}
+
+func (r *ProductRouter) GetConsumerPrice() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		query := strings.ReplaceAll(ctx.Query("list"), "[", "")
+		query = strings.ReplaceAll(query, "]", "")
+		ids_list := strings.Split(query, ",")
+		product_list := []int{}
+
+		for _, id := range ids_list {
+
+			product_id, err := strconv.Atoi(fmt.Sprint(id))
+			if err != nil {
+				resp := web.ErrorResponse{
+					Status:  http.StatusBadRequest,
+					Code:    constants.BadRequestCode,
+					Message: constants.BadRequestMessage,
+				}
+				web.SetErrorResponse(resp, ctx)
+				return
+			}
+
+			product_list = append(product_list, product_id)
+		}
+
+		prducts, total_price := r.service.GetConsumerPrices(product_list)
+
+		response_map := map[string]interface{}{
+			"products":    prducts,
+			"total_price": total_price,
+		}
+		resp := web.Response{
+			Data: response_map,
+		}
+		web.SetResponse(resp, ctx)
+	}
 }
 
 func (r *ProductRouter) GetProducts() gin.HandlerFunc {

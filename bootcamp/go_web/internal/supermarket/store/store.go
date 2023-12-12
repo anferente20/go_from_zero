@@ -8,6 +8,7 @@ type Store interface {
 	Modify(product domain.Product) (domain.Product, error)
 	Delete(id int) error
 	GetAll() []domain.Product
+	GetAllIds() []int
 	Add(product domain.Product) (domain.Product, error)
 	SearchByPrice(price float64) ([]domain.Product, error)
 }

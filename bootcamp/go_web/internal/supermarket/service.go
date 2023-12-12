@@ -10,6 +10,7 @@ type ProductService interface {
 	SearchProducts(productPrice float64) []domain.Product
 	GetProductByID(productId int) domain.Product
 	GetProducts() []domain.Product
+	GetConsumerPrices(ids_list []int) (map[int]domain.Product, float64)
 }
 type ProductJSONService struct {
 	repository ProductRepository
@@ -19,6 +20,9 @@ func NewProductJSONService(repo ProductRepository) ProductService {
 	return ProductJSONService{repo}
 }
 
+func (s ProductJSONService) GetConsumerPrices(ids_list []int) (map[int]domain.Product, float64) {
+	return s.repository.GetConsumerPrices(ids_list)
+}
 func (s ProductJSONService) AddProduct(prod domain.Product) domain.Product {
 	return s.repository.RegisterProduct(prod)
 }
