@@ -6,20 +6,28 @@ import (
 	"fmt"
 )
 
-type ProductRepository struct {
+type ProductRepository interface {
+	GetAllProducts() []domain.Product
+	GetById(id int) domain.Product
+	RegisterProduct(product domain.Product) domain.Product
+	UpdateProduct(product domain.Product) domain.Product
+	SearchProducts(productPrice float64) []domain.Product
+}
+
+type ProductJSONRepository struct {
 	jsonStore store.Store
 }
 
-func NewProductRepository(store store.Store) ProductRepository {
-	return ProductRepository{store}
+func NewProductJSONRepository(store store.Store) ProductRepository {
+	return ProductJSONRepository{store}
 }
 
-func (r *ProductRepository) GetAllProducts() []domain.Product {
+func (r ProductJSONRepository) GetAllProducts() []domain.Product {
 
 	return r.jsonStore.GetAll()
 }
 
-func (r *ProductRepository) GetById(id int) domain.Product {
+func (r ProductJSONRepository) GetById(id int) domain.Product {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -34,7 +42,7 @@ func (r *ProductRepository) GetById(id int) domain.Product {
 
 }
 
-func (r *ProductRepository) RegisterProduct(product domain.Product) domain.Product {
+func (r ProductJSONRepository) RegisterProduct(product domain.Product) domain.Product {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -48,7 +56,7 @@ func (r *ProductRepository) RegisterProduct(product domain.Product) domain.Produ
 	return prod
 }
 
-func (r *ProductRepository) UpdateProduct(product domain.Product) domain.Product {
+func (r ProductJSONRepository) UpdateProduct(product domain.Product) domain.Product {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -63,7 +71,7 @@ func (r *ProductRepository) UpdateProduct(product domain.Product) domain.Product
 
 }
 
-func (r *ProductRepository) SearchProducts(productPrice float64) []domain.Product {
+func (r ProductJSONRepository) SearchProducts(productPrice float64) []domain.Product {
 	defer func() {
 		err := recover()
 		if err != nil {

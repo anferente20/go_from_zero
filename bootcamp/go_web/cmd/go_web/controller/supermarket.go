@@ -24,8 +24,8 @@ type ProductRouter struct {
 
 func NewProductRouter(g *gin.RouterGroup) ProductRouter {
 	store := store.JsonStore{FileName: constants.ProductsFile}
-	repo := supermarket.NewProductRepository(store)
-	service := supermarket.NewProductervice(repo)
+	repo := supermarket.NewProductJSONRepository(store)
+	service := supermarket.NewProductJSONService(repo)
 	return ProductRouter{g, service}
 }
 
