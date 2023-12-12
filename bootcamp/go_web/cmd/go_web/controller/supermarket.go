@@ -5,8 +5,10 @@ import (
 	"bootcamp_go_web/internal/supermarket"
 	"bootcamp_go_web/pkg/constants"
 	"bootcamp_go_web/pkg/utils"
+	"bootcamp_go_web/pkg/utils/store"
 	"fmt"
 	"net/http"
+	"os"
 	"slices"
 	"strconv"
 
@@ -21,8 +23,8 @@ type ProductRouter struct {
 }
 
 func NewProductRouter(g *gin.RouterGroup) ProductRouter {
-	prods := utils.GetProducts(utils.GetJSONFile(constants.ProductsFile))
-	repo := supermarket.NewProductRepository(prods)
+	store := store.JsonStore{FileName: constants.ProductsFile}
+	repo := supermarket.NewProductRepository(store)
 	service := supermarket.NewProductervice(repo)
 	return ProductRouter{g, service}
 }
@@ -91,6 +93,15 @@ func (r *ProductRouter) SearchProducts() gin.HandlerFunc {
 
 func (r *ProductRouter) AddProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("TOKEN")
+		envToken := os.Getenv("TOKEN")
+
+		if token != envToken {
+			ctx.IndentedJSON(http.StatusUnauthorized, gin.H{
+				"message": "Invalid Token",
+			})
+			return
+		}
 		var req map[string]any
 		if err := ctx.ShouldBind(&req); err != nil {
 			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
@@ -155,6 +166,15 @@ func (r *ProductRouter) AddProduct() gin.HandlerFunc {
 
 func (r *ProductRouter) ChangeProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("TOKEN")
+		envToken := os.Getenv("TOKEN")
+
+		if token != envToken {
+			ctx.IndentedJSON(http.StatusUnauthorized, gin.H{
+				"message": "Invalid Token",
+			})
+			return
+		}
 		var req map[string]any
 		if err := ctx.ShouldBind(&req); err != nil {
 			ctx.IndentedJSON(http.StatusBadRequest, gin.H{

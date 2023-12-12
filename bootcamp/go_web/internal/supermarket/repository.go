@@ -2,62 +2,78 @@ package supermarket
 
 import (
 	"bootcamp_go_web/internal/domain"
+	"bootcamp_go_web/pkg/utils/store"
 	"fmt"
-	"slices"
 )
 
 type ProductRepository struct {
-	productsDB []domain.Product
+	jsonStore store.Store
 }
 
-func NewProductRepository(prods []domain.Product) ProductRepository {
-	return ProductRepository{prods}
+func NewProductRepository(store store.Store) ProductRepository {
+	return ProductRepository{store}
 }
 
 func (r *ProductRepository) GetAllProducts() []domain.Product {
-	fmt.Println(len(r.productsDB))
 
-	return r.productsDB
+	return r.jsonStore.GetAll()
 }
 
 func (r *ProductRepository) GetById(id int) domain.Product {
-	product := domain.Product{}
-	for _, prod := range r.productsDB {
-		if prod.Id == id {
-			product = prod
+	defer func() {
+		err := recover()
+		if err != nil {
+			fmt.Println(err)
 		}
+	}()
+	product, err := r.jsonStore.Search(id)
+	if err != nil {
+		panic(err)
 	}
 	return product
 
 }
 
 func (r *ProductRepository) RegisterProduct(product domain.Product) domain.Product {
-	product.Id = len(r.productsDB) + 1
-
-	r.productsDB = append(r.productsDB, product)
-
-	return product
+	defer func() {
+		err := recover()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}()
+	prod, err := r.jsonStore.Add(product)
+	if err != nil {
+		panic(err)
+	}
+	return prod
 }
 
 func (r *ProductRepository) UpdateProduct(product domain.Product) domain.Product {
-	product_index := 0
-	for _, prod := range r.productsDB {
-		if product.Id == prod.Id {
-			product_index = slices.Index(r.productsDB, prod)
-			break
+	defer func() {
+		err := recover()
+		if err != nil {
+			fmt.Println(err)
 		}
+	}()
+	prod, err := r.jsonStore.Modify(product)
+	if err != nil {
+		panic(err)
 	}
-	r.productsDB[product_index] = product
-	return r.productsDB[product_index]
+	return prod
+
 }
 
 func (r *ProductRepository) SearchProducts(productPrice float64) []domain.Product {
-	productsValid := []domain.Product{}
-
-	for _, product := range r.productsDB {
-		if product.Price > productPrice {
-			productsValid = append(productsValid, product)
+	defer func() {
+		err := recover()
+		if err != nil {
+			fmt.Println(err)
 		}
+	}()
+	productsValid, err := r.jsonStore.SearchByPrice(productPrice)
+	if err != nil {
+		panic(err)
 	}
+
 	return productsValid
 }

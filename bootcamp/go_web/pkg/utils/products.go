@@ -2,15 +2,8 @@ package utils
 
 import (
 	"bootcamp_go_web/internal/domain"
-	"encoding/json"
 	"fmt"
 )
-
-func GetProducts(byteValue []byte) []domain.Product {
-	products := []domain.Product{}
-	json.Unmarshal(byteValue, &products)
-	return products
-}
 
 func ValidateField(field string, req map[string]any) (any, bool) {
 	value, included := req[field]
