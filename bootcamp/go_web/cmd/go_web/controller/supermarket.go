@@ -6,6 +6,7 @@ import (
 	"bootcamp_go_web/pkg/constants"
 	"bootcamp_go_web/pkg/utils"
 	"bootcamp_go_web/pkg/utils/store"
+	"bootcamp_go_web/pkg/utils/web"
 	"fmt"
 	"net/http"
 	"os"
@@ -41,7 +42,9 @@ func (r *ProductRouter) ProductRoutes() {
 func (r *ProductRouter) GetProducts() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		data := r.service.GetProducts()
-		ctx.JSON(http.StatusOK, data)
+
+		resp := web.Response{Data: data}
+		web.SetResponse(resp, ctx)
 	}
 }
 
@@ -50,18 +53,27 @@ func (r *ProductRouter) GetProductByID() gin.HandlerFunc {
 		id, err := strconv.Atoi(ctx.Param("id"))
 
 		if err != nil {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": "Bad ID provided",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: constants.BadRequestMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
+
 			return
 		}
 		product := r.service.GetProductByID(id)
 		if product.Id == 0 {
-			ctx.IndentedJSON(http.StatusNotFound, gin.H{
-				"message": " Product not found",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusNotFound,
+				Code:    constants.NotFoundCode,
+				Message: constants.NotFoundMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
+
 		} else {
-			ctx.IndentedJSON(http.StatusOK, product)
+			resp := web.Response{Data: product}
+			web.SetResponse(resp, ctx)
 		}
 	}
 }
@@ -71,9 +83,12 @@ func (r *ProductRouter) SearchProducts() gin.HandlerFunc {
 		intPrice, err := strconv.Atoi(ctx.Query("priceGt"))
 
 		if err != nil {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": "Bad ID provided",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: constants.BadRequestMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 
@@ -81,12 +96,17 @@ func (r *ProductRouter) SearchProducts() gin.HandlerFunc {
 		response := r.service.SearchProducts(price)
 
 		if len(response) == 0 {
-			ctx.IndentedJSON(http.StatusNotFound, gin.H{
-				"message": " Products not found",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusNotFound,
+				Code:    constants.NotFoundCode,
+				Message: constants.NotFoundMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
+
 			return
 		}
-		ctx.IndentedJSON(http.StatusOK, response)
+		resp := web.Response{Data: response}
+		web.SetResponse(resp, ctx)
 	}
 
 }
@@ -97,52 +117,75 @@ func (r *ProductRouter) AddProduct() gin.HandlerFunc {
 		envToken := os.Getenv("TOKEN")
 
 		if token != envToken {
-			ctx.IndentedJSON(http.StatusUnauthorized, gin.H{
-				"message": "Invalid Token",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusUnauthorized,
+				Code:    constants.UnauthorizedCode,
+				Message: constants.UnauthorizedMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
+
 			return
 		}
 		var req map[string]any
 		if err := ctx.ShouldBind(&req); err != nil {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": "Bad product provided",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: constants.BadRequestMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 
 		name, isValid := utils.ValidateField("name", req)
 		if !isValid {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": name,
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: fmt.Sprint(name),
+			}
+			web.SetErrorResponse(resp, ctx)
+
 			return
 		}
 		quantity, isValid := utils.ValidateField("quantity", req)
 		if !isValid {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": quantity,
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: fmt.Sprint(quantity),
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 		codeValue, isValid := utils.ValidateCodeVelue("code_value", req, r.service.GetProducts())
 		if !isValid {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": codeValue,
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: fmt.Sprint(codeValue),
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 		expiration, isValid := utils.ValidateField("expiration", req)
 		if !isValid {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": expiration,
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: fmt.Sprint(expiration),
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 		price, isValid := utils.ValidateField("price", req)
 		if !isValid {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"price": price,
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: fmt.Sprint(price),
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 
@@ -159,8 +202,8 @@ func (r *ProductRouter) AddProduct() gin.HandlerFunc {
 		}
 
 		insertedProduct := r.service.AddProduct(product)
-
-		ctx.IndentedJSON(http.StatusOK, insertedProduct)
+		resp := web.Response{Data: insertedProduct}
+		web.SetResponse(resp, ctx)
 	}
 }
 
@@ -170,24 +213,33 @@ func (r *ProductRouter) ChangeProduct() gin.HandlerFunc {
 		envToken := os.Getenv("TOKEN")
 
 		if token != envToken {
-			ctx.IndentedJSON(http.StatusUnauthorized, gin.H{
-				"message": "Invalid Token",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusUnauthorized,
+				Code:    constants.UnauthorizedCode,
+				Message: constants.UnauthorizedMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 		var req map[string]any
 		if err := ctx.ShouldBind(&req); err != nil {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": "Bad product provided",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: constants.BadRequestMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 		id, err := strconv.Atoi(ctx.Param("id"))
 
 		if err != nil {
-			ctx.IndentedJSON(http.StatusBadRequest, gin.H{
-				"message": "Bad ID provided",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: constants.BadRequestMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 
@@ -195,9 +247,12 @@ func (r *ProductRouter) ChangeProduct() gin.HandlerFunc {
 		product_index := slices.Index(r.service.GetProducts(), updatedProduct)
 
 		if product_index == -1 {
-			ctx.IndentedJSON(http.StatusNotFound, gin.H{
-				"message": " Products not found",
-			})
+			resp := web.ErrorResponse{
+				Status:  http.StatusNotFound,
+				Code:    constants.NotFoundCode,
+				Message: constants.NotFoundMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
 			return
 		}
 		name, included := req["name"]
@@ -233,7 +288,8 @@ func (r *ProductRouter) ChangeProduct() gin.HandlerFunc {
 		}
 
 		updatedProduct = r.service.ChangeProduct(updatedProduct)
-
+		resp := web.Response{Data: updatedProduct}
+		web.SetResponse(resp, ctx)
 		ctx.IndentedJSON(http.StatusOK, updatedProduct)
 	}
 }

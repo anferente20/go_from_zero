@@ -3507,5 +3507,14 @@
   "is___published": true,
   "expiration": "02/04/2021",
   "price": 976.27
+ },
+ {
+  "id": 502,
+  "name": "Apple - Delicious, Golden",
+  "quantity": 225,
+  "code___value": "S73046L",
+  "is___published": true,
+  "expiration": "02/04/2021",
+  "price": 976.27
  }
 ]
