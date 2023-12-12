@@ -3,9 +3,9 @@ package controller
 import (
 	"bootcamp_go_web/internal/domain"
 	"bootcamp_go_web/internal/supermarket"
+	"bootcamp_go_web/internal/supermarket/store"
 	"bootcamp_go_web/pkg/constants"
 	"bootcamp_go_web/pkg/utils"
-	"bootcamp_go_web/pkg/utils/store"
 	"bootcamp_go_web/pkg/utils/web"
 	"fmt"
 	"net/http"

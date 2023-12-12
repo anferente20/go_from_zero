@@ -2,7 +2,7 @@ package supermarket
 
 import (
 	"bootcamp_go_web/internal/domain"
-	"bootcamp_go_web/pkg/utils/store"
+	"bootcamp_go_web/internal/supermarket/store"
 	"fmt"
 )
 
