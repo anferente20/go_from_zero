@@ -43,9 +43,11 @@ func (r *ProductRouter) ProductRoutes() {
 	r.productGroup.GET("/search", r.SearchProducts())
 	r.productGroup.GET("/consumer_price", r.GetConsumerPrice())
 
-	r.productGroup.POST("/", r.AddProduct())
+	r.productGroup.POST("/", r.AddProduct(TokenValidation()))
 
-	r.productGroup.PATCH("/:id", r.ChangeProduct())
+	r.productGroup.PATCH("/:id", r.ChangeProduct(TokenValidation()))
+
+	r.productGroup.DELETE("/:id", r.DeleteProduct(TokenValidation()))
 }
 
 func (r *ProductRouter) GetConsumerPrice() gin.HandlerFunc {
@@ -160,21 +162,9 @@ func (r *ProductRouter) SearchProducts() gin.HandlerFunc {
 
 }
 
-func (r *ProductRouter) AddProduct() gin.HandlerFunc {
+func (r *ProductRouter) AddProduct(f func(ctx *gin.Context)) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("TOKEN")
-		envToken := os.Getenv("TOKEN")
 
-		if token != envToken {
-			resp := web.ErrorResponse{
-				Status:  http.StatusUnauthorized,
-				Code:    constants.UnauthorizedCode,
-				Message: constants.UnauthorizedMessage,
-			}
-			web.SetErrorResponse(resp, ctx)
-
-			return
-		}
 		var req map[string]any
 		if err := ctx.ShouldBind(&req); err != nil {
 			resp := web.ErrorResponse{
@@ -259,20 +249,9 @@ func (r *ProductRouter) AddProduct() gin.HandlerFunc {
 	}
 }
 
-func (r *ProductRouter) ChangeProduct() gin.HandlerFunc {
+func (r *ProductRouter) ChangeProduct(f func(ctx *gin.Context)) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("TOKEN")
-		envToken := os.Getenv("TOKEN")
 
-		if token != envToken {
-			resp := web.ErrorResponse{
-				Status:  http.StatusUnauthorized,
-				Code:    constants.UnauthorizedCode,
-				Message: constants.UnauthorizedMessage,
-			}
-			web.SetErrorResponse(resp, ctx)
-			return
-		}
 		var req map[string]any
 		if err := ctx.ShouldBind(&req); err != nil {
 			resp := web.ErrorResponse{
@@ -348,7 +327,7 @@ func (r *ProductRouter) ChangeProduct() gin.HandlerFunc {
 	}
 }
 
-func (r *ProductRouter) DeleteProduct() gin.HandlerFunc {
+func (r *ProductRouter) DeleteProduct(f func(ctx *gin.Context)) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		product_id, err := strconv.Atoi(ctx.Param("id"))
 
@@ -375,5 +354,25 @@ func (r *ProductRouter) DeleteProduct() gin.HandlerFunc {
 		}
 		resp := web.Response{Data: "", Status: http.StatusNoContent}
 		web.SetResponse(resp, ctx)
+	}
+}
+
+func TokenValidation() gin.HandlerFunc {
+	envToken := os.Getenv("TOKEN")
+
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("TOKEN")
+		if token != envToken {
+			resp := web.ErrorResponse{
+				Status:  http.StatusUnauthorized,
+				Code:    constants.UnauthorizedCode,
+				Message: constants.UnauthorizedMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
+
+			return
+		}
+		ctx.Next()
+
 	}
 }

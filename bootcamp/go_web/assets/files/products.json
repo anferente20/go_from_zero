@@ -4261,5 +4261,14 @@
   "code_value": "S2599XD",
   "expiration": "11/05/2021",
   "price": 515.93
+ },
+ {
+  "id": 501,
+  "name": "Apple - Delicious, Golden",
+  "quantity": 225,
+  "code_value": "S73046L",
+  "is_published": true,
+  "expiration": "02/04/2021",
+  "price": 976.27
  }
 ]
