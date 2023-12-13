@@ -11,7 +11,7 @@ var Api = gin.Default()
 func SetRoutes() {
 	//Create products routes
 	productsGroup := Api.Group("/products")
-	productRouter := controller.NewProductRouter(productsGroup)
+	productRouter := controller.NewProductRouter(productsGroup, true)
 	productRouter.ProductRoutes()
 
 }

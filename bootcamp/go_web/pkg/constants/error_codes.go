@@ -9,4 +9,7 @@ const (
 
 	UnauthorizedCode    = "ESM003"
 	UnauthorizedMessage = "Invalid Token"
+
+	ErrorDeletingCode    = "ESM004"
+	ErrorDeletingMessage = "Error deleting product"
 )

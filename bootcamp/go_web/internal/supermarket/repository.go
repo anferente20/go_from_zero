@@ -13,6 +13,7 @@ type ProductRepository interface {
 	UpdateProduct(product domain.Product) domain.Product
 	SearchProducts(productPrice float64) []domain.Product
 	GetConsumerPrices(ids_list []int) (map[int]domain.Product, float64)
+	DeleteProduct(product_id int) error
 }
 
 type ProductJSONRepository struct {
@@ -66,6 +67,10 @@ func (s ProductJSONRepository) GetConsumerPrices(ids_list []int) (map[int]domain
 	}
 	return products_list, total_price
 
+}
+
+func (s ProductJSONRepository) DeleteProduct(product_id int) error {
+	return s.jsonStore.Delete(product_id)
 }
 
 func (r ProductJSONRepository) GetAllProducts() []domain.Product {

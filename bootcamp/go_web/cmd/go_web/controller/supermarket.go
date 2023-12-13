@@ -24,9 +24,15 @@ type ProductRouter struct {
 	service supermarket.ProductService
 }
 
-func NewProductRouter(g *gin.RouterGroup) ProductRouter {
-	store := store.JsonStore{FileName: constants.ProductsFile}
-	repo := supermarket.NewProductJSONRepository(store)
+func NewProductRouter(g *gin.RouterGroup, is_prod bool) ProductRouter {
+	var db store.Store
+	if is_prod {
+		db = store.JsonStore{FileName: constants.ProductsFile}
+	} else {
+		db = store.JsonStore{FileName: constants.ProductsTestFile}
+	}
+
+	repo := supermarket.NewProductJSONRepository(db)
 	service := supermarket.NewProductJSONService(repo)
 	return ProductRouter{g, service}
 }
@@ -72,7 +78,8 @@ func (r *ProductRouter) GetConsumerPrice() gin.HandlerFunc {
 			"total_price": total_price,
 		}
 		resp := web.Response{
-			Data: response_map,
+			Data:   response_map,
+			Status: http.StatusOK,
 		}
 		web.SetResponse(resp, ctx)
 	}
@@ -144,7 +151,10 @@ func (r *ProductRouter) SearchProducts() gin.HandlerFunc {
 
 			return
 		}
-		resp := web.Response{Data: response}
+		resp := web.Response{
+			Data:   response,
+			Status: http.StatusOK,
+		}
 		web.SetResponse(resp, ctx)
 	}
 
@@ -241,7 +251,10 @@ func (r *ProductRouter) AddProduct() gin.HandlerFunc {
 		}
 
 		insertedProduct := r.service.AddProduct(product)
-		resp := web.Response{Data: insertedProduct}
+		resp := web.Response{
+			Data:   insertedProduct,
+			Status: http.StatusOK,
+		}
 		web.SetResponse(resp, ctx)
 	}
 }
@@ -327,8 +340,40 @@ func (r *ProductRouter) ChangeProduct() gin.HandlerFunc {
 		}
 
 		updatedProduct = r.service.ChangeProduct(updatedProduct)
-		resp := web.Response{Data: updatedProduct}
+		resp := web.Response{
+			Data:   updatedProduct,
+			Status: http.StatusOK,
+		}
 		web.SetResponse(resp, ctx)
-		ctx.IndentedJSON(http.StatusOK, updatedProduct)
+	}
+}
+
+func (r *ProductRouter) DeleteProduct() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		product_id, err := strconv.Atoi(ctx.Param("id"))
+
+		if err != nil {
+			resp := web.ErrorResponse{
+				Status:  http.StatusBadRequest,
+				Code:    constants.BadRequestCode,
+				Message: constants.BadRequestMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
+			return
+		}
+
+		err = r.service.DeleteProduct(product_id)
+
+		if err != nil {
+			resp := web.ErrorResponse{
+				Status:  http.StatusConflict,
+				Code:    constants.ErrorDeletingCode,
+				Message: constants.ErrorDeletingMessage,
+			}
+			web.SetErrorResponse(resp, ctx)
+			return
+		}
+		resp := web.Response{Data: "", Status: http.StatusNoContent}
+		web.SetResponse(resp, ctx)
 	}
 }

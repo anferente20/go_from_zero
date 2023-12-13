@@ -12,3 +12,7 @@ type Store interface {
 	Add(product domain.Product) (domain.Product, error)
 	SearchByPrice(price float64) ([]domain.Product, error)
 }
+
+func New(fileName string) Store {
+	return JsonStore{FileName: fileName}
+}

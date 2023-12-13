@@ -1,8 +1,6 @@
 package web
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +11,8 @@ type ErrorResponse struct {
 }
 
 type Response struct {
-	Data interface{} `json:"data"`
+	Status int         `json:"status"`
+	Data   interface{} `json:"data"`
 }
 
 func SetErrorResponse(errorResponse ErrorResponse, ctx *gin.Context) {
@@ -21,5 +20,5 @@ func SetErrorResponse(errorResponse ErrorResponse, ctx *gin.Context) {
 }
 
 func SetResponse(response Response, ctx *gin.Context) {
-	ctx.IndentedJSON(http.StatusOK, response)
+	ctx.IndentedJSON(response.Status, response)
 }
